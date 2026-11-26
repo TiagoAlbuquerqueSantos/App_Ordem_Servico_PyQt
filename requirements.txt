@@ -1,0 +1,2 @@
+# Sistema de Ordem de Serviço - Dependências
+PyQt6>=6.6.0
