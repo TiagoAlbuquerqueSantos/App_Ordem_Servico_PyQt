@@ -103,16 +103,16 @@ O banco SQLite é criado automaticamente na primeira execução em:
 
 ### Temas
 
-Edite `resources/style.qss` para personalizar cores, fontes e estilos.
+Edite `res` para personalizar cores, fontes e estilos.
 
 ### Campos Adicionais
 
 Para adicionar campos:
-1. Adicione ao modelo em `models/__init__.py`
-2. Atualize o schema em `database/connection.py`
+1. Adicione ao modelo em `src/models`
+2. Atualize o schema em `src/database`
 3. Atualize o repository correspondente
-4. Adicione nos dialogs em `ui/dialogs.py`
-5. Atualize a tabela em `ui/main_window.py`
+4. Adicione nos dialogs em `src/ui`
+5. Atualize a tabela em `src/ui`
 
 ## Licença
 

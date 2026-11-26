@@ -3,9 +3,8 @@
 Widgets personalizados
 """
 
-from PyQt6.QtWidgets import QLabel, QWidget, QHBoxLayout
+from PyQt6.QtWidgets import QLabel, QWidget, QHBoxLayout, QDoubleSpinBox
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont, QColor, QPainter, QBrush, QPen
 
 
 class StatusBadge(QLabel):

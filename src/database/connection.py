@@ -11,10 +11,10 @@ from typing import Optional
 
 class DatabaseConnection:
     """Gerenciador de conexão com banco de dados SQLite"""
-    
+
     _instance: Optional['DatabaseConnection'] = None
     _db_path: Path
-    
+
     def __new__(cls, db_path: str = None):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -26,7 +26,7 @@ class DatabaseConnection:
             else:
                 cls._db_path = Path(db_path)
         return cls._instance
-    
+
     @contextmanager
     def get_connection(self):
         """Context manager para conexão com o banco"""
@@ -41,25 +41,25 @@ class DatabaseConnection:
             raise
         finally:
             conn.close()
-    
+
     def execute(self, query: str, params: tuple = ()) -> sqlite3.Cursor:
         """Executa uma query e retorna o cursor"""
         with self.get_connection() as conn:
             cursor = conn.execute(query, params)
             return cursor
-    
+
     def fetch_one(self, query: str, params: tuple = ()) -> Optional[sqlite3.Row]:
         """Executa query e retorna uma linha"""
         with self.get_connection() as conn:
             cursor = conn.execute(query, params)
             return cursor.fetchone()
-    
+
     def fetch_all(self, query: str, params: tuple = ()) -> list:
         """Executa query e retorna todas as linhas"""
         with self.get_connection() as conn:
             cursor = conn.execute(query, params)
             return cursor.fetchall()
-    
+
     def execute_many(self, query: str, params_list: list) -> None:
         """Executa múltiplas queries"""
         with self.get_connection() as conn:
@@ -74,7 +74,7 @@ def get_db() -> DatabaseConnection:
 def init_database(db_path: str = None) -> None:
     """Inicializa o banco de dados criando as tabelas necessárias"""
     db = DatabaseConnection(db_path)
-    
+
     with db.get_connection() as conn:
         # Tabela de clientes
         conn.execute("""
@@ -93,7 +93,7 @@ def init_database(db_path: str = None) -> None:
                 ativo BOOLEAN DEFAULT 1
             )
         """)
-        
+
         # Tabela de equipamentos
         conn.execute("""
             CREATE TABLE IF NOT EXISTS equipamentos (
@@ -109,7 +109,7 @@ def init_database(db_path: str = None) -> None:
                 FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
             )
         """)
-        
+
         # Tabela de ordens de serviço
         conn.execute("""
             CREATE TABLE IF NOT EXISTS ordens_servico (
@@ -135,7 +135,7 @@ def init_database(db_path: str = None) -> None:
                 FOREIGN KEY (equipamento_id) REFERENCES equipamentos(id) ON DELETE RESTRICT
             )
         """)
-        
+
         # Tabela de itens da OS (peças/serviços)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS os_itens (
@@ -149,7 +149,7 @@ def init_database(db_path: str = None) -> None:
                 FOREIGN KEY (os_id) REFERENCES ordens_servico(id) ON DELETE CASCADE
             )
         """)
-        
+
         # Tabela de histórico/movimentações da OS
         conn.execute("""
             CREATE TABLE IF NOT EXISTS os_historico (
@@ -163,14 +163,14 @@ def init_database(db_path: str = None) -> None:
                 FOREIGN KEY (os_id) REFERENCES ordens_servico(id) ON DELETE CASCADE
             )
         """)
-        
+
         # Índices para performance
         conn.execute("CREATE INDEX IF NOT EXISTS idx_os_cliente ON ordens_servico(cliente_id)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_os_status ON ordens_servico(status)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_os_data_abertura ON ordens_servico(data_abertura)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_equip_cliente ON equipamentos(cliente_id)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_clientes_nome ON clientes(nome)")
-        
+
         conn.commit()
 
 

@@ -3,24 +3,23 @@
 Dialogs da aplicação
 """
 
+from typing import List
+
+from PyQt6.QtCore import Qt, QDate
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QFormLayout, QTabWidget,
     QWidget, QLabel, QLineEdit, QTextEdit, QComboBox, QDateEdit,
     QSpinBox, QDoubleSpinBox, QPushButton, QTableWidget, QTableWidgetItem,
-    QHeaderView, QMessageBox, QDialogButtonBox, QGroupBox, QCheckBox,
+    QMessageBox, QDialogButtonBox, QGroupBox, QCheckBox,
     QScrollArea, QFrame, QAbstractItemView, QCompleter
 )
-from PyQt6.QtCore import Qt, QDate, QStringListModel
-from PyQt6.QtGui import QFont
-from datetime import date, datetime
-from typing import List, Optional
 
 from models import (
     Cliente, Equipamento, OrdemServico, OSItem, STATUS_OS,
     PRIORIDADES, TIPOS_ITEM, TIPOS_EQUIPAMENTO
 )
 from repositories import ClienteRepository, EquipamentoRepository
-from ui.widgets import MoneyEdit
 
 
 class BaseDialog(QDialog):

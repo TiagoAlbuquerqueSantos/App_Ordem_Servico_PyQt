@@ -23,15 +23,15 @@ class Cliente:
     observacoes: str = ""
     data_cadastro: Optional[datetime] = None
     ativo: bool = True
-    
+
     def __post_init__(self):
         if self.data_cadastro is None:
             self.data_cadastro = datetime.now()
-    
+
     @property
     def nome_formatado(self) -> str:
         return f"{self.nome} ({self.cpf_cnpj})" if self.cpf_cnpj else self.nome
-    
+
     def to_dict(self) -> dict:
         return {
             'id': self.id,
@@ -47,7 +47,7 @@ class Cliente:
             'data_cadastro': self.data_cadastro.isoformat() if self.data_cadastro else None,
             'ativo': self.ativo
         }
-    
+
     @classmethod
     def from_row(cls, row) -> 'Cliente':
         """Cria instância a partir de uma row do SQLite"""
@@ -79,11 +79,11 @@ class Equipamento:
     defeito_relatado: str = ""
     acessorios: str = ""
     data_cadastro: Optional[datetime] = None
-    
+
     def __post_init__(self):
         if self.data_cadastro is None:
             self.data_cadastro = datetime.now()
-    
+
     @property
     def descricao_completa(self) -> str:
         parts = [self.tipo]
@@ -92,7 +92,7 @@ class Equipamento:
         if self.modelo:
             parts.append(self.modelo)
         return " - ".join(parts)
-    
+
     def to_dict(self) -> dict:
         return {
             'id': self.id,
@@ -105,7 +105,7 @@ class Equipamento:
             'acessorios': self.acessorios,
             'data_cadastro': self.data_cadastro.isoformat() if self.data_cadastro else None
         }
-    
+
     @classmethod
     def from_row(cls, row) -> 'Equipamento':
         return cls(
@@ -131,10 +131,10 @@ class OSItem:
     quantidade: int = 1
     valor_unitario: float = 0.0
     valor_total: float = 0.0
-    
+
     def __post_init__(self):
         self.valor_total = self.quantidade * self.valor_unitario
-    
+
     def to_dict(self) -> dict:
         return {
             'id': self.id,
@@ -145,7 +145,7 @@ class OSItem:
             'valor_unitario': self.valor_unitario,
             'valor_total': self.valor_total
         }
-    
+
     @classmethod
     def from_row(cls, row) -> 'OSItem':
         return cls(
@@ -181,22 +181,22 @@ class OrdemServico:
     data_entrega: Optional[datetime] = None
     observacoes: str = ""
     itens: List[OSItem] = field(default_factory=list)
-    
+
     # Campos relacionados (preenchidos via join)
     cliente_nome: str = ""
     equipamento_descricao: str = ""
-    
+
     def __post_init__(self):
         if self.data_abertura is None:
             self.data_abertura = datetime.now()
         if not self.numero_os:
             self.numero_os = self._gerar_numero_os()
-    
+
     def _gerar_numero_os(self) -> str:
         """Gera número da OS baseado na data atual"""
         now = datetime.now()
         return f"OS{now.strftime('%Y%m%d%H%M%S')}"
-    
+
     @property
     def status_cor(self) -> str:
         """Retorna cor para o status"""
@@ -210,7 +210,7 @@ class OrdemServico:
             'CANCELADA': '#95a5a6'
         }
         return cores.get(self.status, '#34495e')
-    
+
     def to_dict(self) -> dict:
         return {
             'id': self.id,
@@ -233,7 +233,7 @@ class OrdemServico:
             'observacoes': self.observacoes,
             'itens': [item.to_dict() for item in self.itens]
         }
-    
+
     @classmethod
     def from_row(cls, row) -> 'OrdemServico':
         return cls(
@@ -251,7 +251,8 @@ class OrdemServico:
             valor_mao_obra=row['valor_mao_obra'] or 0,
             valor_total=row['valor_total'] or 0,
             data_abertura=datetime.fromisoformat(row['data_abertura']) if row['data_abertura'] else None,
-            data_previsao_entrega=datetime.fromisoformat(row['data_previsao_entrega']).date() if row['data_previsao_entrega'] else None,
+            data_previsao_entrega=datetime.fromisoformat(row['data_previsao_entrega']).date() if row[
+                'data_previsao_entrega'] else None,
             data_conclusao=datetime.fromisoformat(row['data_conclusao']) if row['data_conclusao'] else None,
             data_entrega=datetime.fromisoformat(row['data_entrega']) if row['data_entrega'] else None,
             observacoes=row['observacoes'] or '',
@@ -270,11 +271,11 @@ class OSHistorico:
     descricao: str = ""
     usuario: str = ""
     data_movimentacao: Optional[datetime] = None
-    
+
     def __post_init__(self):
         if self.data_movimentacao is None:
             self.data_movimentacao = datetime.now()
-    
+
     @classmethod
     def from_row(cls, row) -> 'OSHistorico':
         return cls(

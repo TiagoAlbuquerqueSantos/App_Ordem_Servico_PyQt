@@ -5,14 +5,13 @@ Aplicação desktop para gestão de ordens de serviço
 """
 
 import sys
-import os
 from pathlib import Path
 
 # Adiciona o diretório do projeto ao path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from ui.main_window import MainWindow
+from src.ui.main_window import MainWindow
 from database.connection import init_database
 
 
